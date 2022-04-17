@@ -1,4 +1,4 @@
-package com.library.library.config;
+package com.library.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +27,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiEndPointsInfo() {
         return new ApiInfoBuilder().title("Spring Boot Swagger Örnegi")
-                .description("Pet Api Dokümantasyonu")
-                .contact(new Contact("Haydi Kodlayalim", "", ""))
+                .description("Library Api Dokümantasyonu")
+                .contact(new Contact("Vedat Bilaloglu", "", ""))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
                 .version("1.12.3")
