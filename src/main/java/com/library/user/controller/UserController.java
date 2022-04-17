@@ -1,8 +1,8 @@
-package com.library.library.user.controller;
+package com.library.user.controller;
 
-import com.library.library.user.model.UserRequestDto;
-import com.library.library.user.model.UserResponseDto;
-import com.library.library.user.service.UserServiceImpl;
+import com.library.user.model.UserRequestDto;
+import com.library.user.model.UserResponseDto;
+import com.library.user.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ public class UserController {
     private final UserServiceImpl userServiceImpl;
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id){
+    public ResponseEntity<UserResponseDto> findUserById(@PathVariable Long id){
 
         final UserResponseDto userResponseDto = userServiceImpl.findUserById(id);
 
@@ -25,19 +25,17 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserResponseDto> getAllUser(){
+    public List<UserResponseDto> findAllUser(){
 
-        final List<UserResponseDto> allUser = userServiceImpl.findAllUsers();
-
-        return allUser;
+        return userServiceImpl.findAllUsers();
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> saveUser(@RequestBody UserRequestDto userRequestDto){
+    public ResponseEntity<Void> saveUser(@RequestBody UserRequestDto userRequestDto){
 
-        final UserResponseDto userResponseDto = userServiceImpl.saveUser(userRequestDto);
+        userServiceImpl.saveUser(userRequestDto);
 
-        return ResponseEntity.ok(userResponseDto);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
@@ -49,11 +47,11 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<UserResponseDto> deleteUserById(@PathVariable Long id){
+    public ResponseEntity<Void> deleteUserById(@PathVariable Long id){
 
-        final UserResponseDto userResponseDto = userServiceImpl.deleteUserById(id);
+        userServiceImpl.deleteUserById(id);
 
-        return ResponseEntity.ok(userResponseDto);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping

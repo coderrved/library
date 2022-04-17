@@ -1,24 +1,47 @@
-package com.library.library.user.entity;
+package com.library.user.entity;
 
+import com.library.address.entity.Address;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.List;
+
 
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
+    @SequenceGenerator(name = "seq_user", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_user")
+    private Long id;
 
-    public String name;
+    @NotNull
+    private String name;
 
-    public int age;
+    @NotNull
+    private String surname;
+
+    @NotNull
+    private LocalDate dateOfBirthday;
+
+    @NotNull
+    @Email
+    private String email;
+
+    @NotNull
+    private String phoneNumber;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> userAddresses;
 
 }
