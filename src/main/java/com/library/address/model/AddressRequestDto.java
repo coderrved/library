@@ -1,6 +1,5 @@
 package com.library.address.model;
 
-import com.library.user.entity.User;
 import com.library.address.enums.AddressTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +15,4 @@ public class AddressRequestDto {
     private AddressTypeEnum addressType;
 
     private Boolean active;
-
-    private User user;
 }
