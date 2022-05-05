@@ -2,7 +2,7 @@ package com.library.user.service.impl;
 
 import com.library.address.repository.AddressRepository;
 import com.library.user.entity.User;
-import com.library.user.exception.UserNotFound;
+import com.library.user.exceptions.UserNotFound;
 import com.library.user.model.UserRequestDto;
 import com.library.user.model.UserResponseDto;
 import com.library.user.repository.UserRepository;
