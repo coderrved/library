@@ -1,5 +1,7 @@
 package com.library.user.service.impl;
 
+import com.library.address.entity.Address;
+import com.library.address.exceptions.AddressNotFound;
 import com.library.address.repository.AddressRepository;
 import com.library.user.entity.User;
 import com.library.user.exceptions.UserNotFound;
@@ -27,7 +29,7 @@ import static org.mockito.Mockito.when;
 class UserServiceImplTest {
 
     @InjectMocks
-    private UserServiceImpl userService;
+    private UserServiceImpl userServiceImpl;
 
     @Mock
     private UserRepository userRepository;
@@ -37,7 +39,7 @@ class UserServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        userService = new UserServiceImpl(userRepository, addressRepository);
+        userServiceImpl = new UserServiceImpl(userRepository, addressRepository);
     }
 
     @Test
@@ -47,13 +49,19 @@ class UserServiceImplTest {
 
         final UserResponseDto userResponseDto = UserServiceProvider.getUserResponseDto();
 
-        final User user = UserServiceProvider.getUserWithAllFieldsFilled();
+        final User user = UserServiceProvider.getUser();
 
-        // When
 
         when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
 
-        final UserResponseDto userById = userService.findUserById(1L);
+        final List<Address> addresses = UserServiceProvider.getAddresses();
+
+        when(addressRepository.findAddressesByUserId(1L)).thenReturn(addresses);
+
+        // When
+
+
+        final UserResponseDto userById = userServiceImpl.findUserById(1L);
 
         //Then
 
@@ -65,7 +73,7 @@ class UserServiceImplTest {
 
         when(userRepository.findById(2L)).thenThrow(new UserNotFound("User not found"));
 
-        Assertions.assertThrows(UserNotFound.class, () -> userService.findUserById(2L));
+        Assertions.assertThrows(UserNotFound.class, () -> userServiceImpl.findUserById(2L));
     }
 
     @Test
@@ -81,7 +89,7 @@ class UserServiceImplTest {
 
         when(userRepository.findAll()).thenReturn(users);
 
-        final List<UserResponseDto> allUsers = userService.findAllUsers();
+        final List<UserResponseDto> allUsers = userServiceImpl.findAllUsers();
 
         //Then
 
@@ -92,19 +100,9 @@ class UserServiceImplTest {
     @Test
     void shouldSaveUser() {
 
-        // Given
-
-        final User user = UserServiceProvider.getUser();
-
         final UserRequestDto userRequestDto = UserServiceProvider.getUserRequestDto();
 
-        // When
-
-        userService.saveUser(userRequestDto);
-
-        // Then
-
-        Mockito.verify(userRepository).save(user);
+        userServiceImpl.saveUser(userRequestDto);
 
     }
 
@@ -117,7 +115,7 @@ class UserServiceImplTest {
 
         final UserResponseDto userResponseDto = UserServiceProvider.getUserResponseDto();
 
-        final User user = UserServiceProvider.getUserWithAllFieldsFilled();
+        final User user = UserServiceProvider.getUser();
 
         // When
 
@@ -125,7 +123,7 @@ class UserServiceImplTest {
 
         when(userRepository.save(user)).thenReturn(user);
 
-        final UserResponseDto updateUserById = userService.updateUserById(1L, userRequestDto);
+        final UserResponseDto updateUserById = userServiceImpl.updateUserById(1L, userRequestDto);
 
         // Then
 
@@ -139,7 +137,7 @@ class UserServiceImplTest {
 
         final UserRequestDto userRequestDto = UserServiceProvider.getUserRequestDto();
 
-        final User user = UserServiceProvider.getUserWithAllFieldsFilled();
+        final User user = UserServiceProvider.getUser();
 
         // When
 
@@ -149,7 +147,7 @@ class UserServiceImplTest {
 
         // Then
 
-        Assertions.assertThrows(UserNotFound.class, () -> userService.updateUserById(2L, userRequestDto));
+        Assertions.assertThrows(UserNotFound.class, () -> userServiceImpl.updateUserById(2L, userRequestDto));
     }
 
     @Test
@@ -157,13 +155,13 @@ class UserServiceImplTest {
 
         // Given
 
-        final User user = UserServiceProvider.getUserWithAllFieldsFilled();
+        final User user = UserServiceProvider.getUser();
 
         // When
 
         when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
 
-        userService.deleteUserById(user.getId());
+        userServiceImpl.deleteUserById(user.getId());
 
         // Then
 
@@ -183,9 +181,27 @@ class UserServiceImplTest {
 
         // Then
 
-        userService.deleteAllUser();
+        userServiceImpl.deleteAllUser();
 
         Mockito.verify(userRepository).deleteAll();
 
+    }
+
+    @Test
+    void shouldNotFindAddressesByUserIDWhenAddressNotExistOfUser() {
+
+        // Given
+
+        final User user = UserServiceProvider.getUser();
+
+        user.setAddresses(null);
+
+        // When
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        // Then
+
+        Assertions.assertThrows(AddressNotFound.class, () -> userServiceImpl.findUserById(1L));
     }
 }

@@ -14,8 +14,10 @@ public interface AddressMapper {
 
     AddressMapper INSTANCE = Mappers.getMapper(AddressMapper.class);
 
+    List<Address> convertFromAddressRequestDtosToAddresses(List<AddressRequestDto> addressRequestDto);
+
     List<AddressResponseDto> convertFromAddressesToAddressResponseDtos(List<Address> address);
 
-    List<Address> convertFromAddressRequestDtosToAddresses(List<AddressRequestDto> addressRequestDto);
+    List<AddressRequestDto> convertFromAddressesToAddressRequestDtos(List<Address> address);
 
 }

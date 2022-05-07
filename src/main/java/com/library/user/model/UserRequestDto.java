@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class UserRequestDto {
 
     private String email;
 
-    private BigDecimal phoneNumber;
+    private String phoneNumber;
 
     private List<AddressRequestDto> userAddresses;
 }
